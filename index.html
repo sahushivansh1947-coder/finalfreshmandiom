@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galimandi | Farm Fresh Delivered</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Outfit:wght@700;800&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#16A34A',
+            accent: '#FF6B00',
+            softWhite: '#F8FAFC',
+            brandBeige: '#FDFCF7',
+            brandGreen: '#708238'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Poppins', 'sans-serif'],
+            brand: ['Outfit', 'sans-serif'],
+            serif: ['Fraunces', 'serif']
+          },
+          borderRadius: {
+            'xl': '16px',
+            '4xl': '32px',
+            '5xl': '48px',
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'spin-slow': 'spin 12s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-20px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FDFCF7;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .organic-blob {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+  </style>
+
+  <link rel="stylesheet" href="/index.css">
+
+  <!-- MSG91 OTP Widget Integration -->
+  <script type="text/javascript">
+    var configuration = {
+      widgetId: "36624272444f333931393831",
+      tokenAuth: "497026TZDdbCze69a336a2P1",
+      exposeMethods: true, // Required for custom UI integration
+      success: (data) => {
+        console.log('MSG91 Success:', data);
+        // Notify the app about success
+        window.dispatchEvent(new CustomEvent('msg91-otp-success', {
+          detail: data
+        }));
+      },
+      failure: (error) => {
+        console.log('MSG91 Failure:', error);
+        // Notify the app about failure
+        window.dispatchEvent(new CustomEvent('msg91-otp-failure', {
+          detail: error
+        }));
+      },
+    };
+    // Ensure compatibility with existing service
+    window.msg91Config = configuration;
+  </script>
+
+  <script type="text/javascript">
+    (function loadOtpScript(urls) {
+      let i = 0;
+
+      function attempt() {
+        console.log(`[MSG91] Attempting to load from: ${urls[i]}`);
+        const s = document.createElement('script');
+        s.src = urls[i];
+        s.async = true;
+        s.onload = () => {
+          if (typeof window.initSendOTP === 'function') {
+            window.initSendOTP(configuration);
+            console.log('[MSG91] OTP Provider initialized');
+          }
+        };
+        s.onerror = () => {
+          i++;
+          if (i < urls.length) {
+            attempt();
+          } else {
+            console.error('[MSG91] Failed to load OTP script');
+          }
+        };
+        document.head.appendChild(s);
+      }
+      attempt();
+    })([
+      'https://verify.msg91.com/otp-provider.js',
+      'https://verify.phone91.com/otp-provider.js'
+    ]);
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>

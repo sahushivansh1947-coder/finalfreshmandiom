@@ -1,0 +1,7 @@
+{
+  "name": "Galimandi - Fresh & Fast Hyperlocal Delivery",
+  "description": "An ultra-modern, premium hyperlocal vegetable and grocery delivery platform featuring lightning-fast 30-minute delivery direct from mandis to your doorstep.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

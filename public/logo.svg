@@ -1,0 +1,24 @@
+<svg width="240" height="60" viewBox="0 0 240 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Basket Icon -->
+  <g transform="translate(10, 25)">
+    <!-- Basket Body (Yellow) -->
+    <path d="M2 5 L38 5 L34 25 L6 25 Z" fill="#FFD700" stroke="#FFD700" stroke-width="2" stroke-linejoin="round" />
+    <!-- Weave details -->
+    <circle cx="10" cy="10" r="1.5" fill="white" opacity="0.5"/>
+    <circle cx="20" cy="10" r="1.5" fill="white" opacity="0.5"/>
+    <circle cx="30" cy="10" r="1.5" fill="white" opacity="0.5"/>
+    <circle cx="15" cy="18" r="1.5" fill="white" opacity="0.5"/>
+    <circle cx="25" cy="18" r="1.5" fill="white" opacity="0.5"/>
+    
+    <!-- Leaves -->
+    <g transform="translate(15, -18)">
+      <!-- Green Leaf -->
+      <path d="M0 15 C-5 5, 5 0, 10 10 C15 0, 25 5, 20 15 Z" fill="#4CAF50" transform="rotate(-30 10 10) scale(0.6)" />
+      <!-- Orange Leaf -->
+      <path d="M0 15 C-5 5, 5 0, 10 10 C15 0, 25 5, 20 15 Z" fill="#FF8C00" transform="translate(12, 2) rotate(30 10 10) scale(0.6)" />
+    </g>
+  </g>
+  
+  <!-- Text: Galimandi -->
+  <text x="60" y="45" font-family="Arial, sans-serif" font-weight="900" font-size="32" fill="#2E7D32" letter-spacing="-1">Galimandi</text>
+</svg>

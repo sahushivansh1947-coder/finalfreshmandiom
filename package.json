@@ -1,0 +1,31 @@
+{
+  "name": "galimandi-customer-app",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:force": "vite --force",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "npm run dev",
+    "backend": "cd backend-api && npm start"
+  },
+  "dependencies": {
+    "@insforge/sdk": "^1.1.5",
+    "canvas-confetti": "^1.9.4",
+    "framer-motion": "^12.34.0",
+    "lucide-react": "^0.564.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.0",
+    "recharts": "^3.7.0"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}
