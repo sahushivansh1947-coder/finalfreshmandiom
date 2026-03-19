@@ -377,7 +377,18 @@ const CheckoutPage = () => {
   };
 
   const paymentMethods = [
-    { id: 'cod_upi', name: 'Cash on Delivery / UPI', icon: <Banknote className="text-green-600" /> },
+    { 
+      id: 'cod_upi', 
+      name: 'Cash on Delivery / UPI', 
+      icon: <Banknote className="text-green-600" />,
+      subtitle: 'Pay at your doorstep'
+    },
+    ...(walletBalance !== null && walletBalance > 0 ? [{
+      id: 'wallet',
+      name: 'Wallet',
+      icon: <Wallet className="text-amber-500" />,
+      subtitle: `Balance: ₹${walletBalance}`
+    }] : [])
   ];
 
   if (cart.length === 0) {

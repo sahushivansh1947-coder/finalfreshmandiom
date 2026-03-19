@@ -1,0 +1,20 @@
+﻿components/ProductCard.tsx(53,17): error TS2304: Cannot find name 'CartItem'.
+constants.tsx(8,5): error TS2353: Object literal may only specify known properties, and 'icon' does not exist in type 'Category'.
+constants.tsx(15,5): error TS2353: Object literal may only specify known properties, and 'icon' does not exist in type 'Category'.
+constants.tsx(22,5): error TS2353: Object literal may only specify known properties, and 'icon' does not exist in type 'Category'.
+constants.tsx(29,5): error TS2353: Object literal may only specify known properties, and 'icon' does not exist in type 'Category'.
+constants.tsx(36,5): error TS2353: Object literal may only specify known properties, and 'icon' does not exist in type 'Category'.
+constants.tsx(43,5): error TS2353: Object literal may only specify known properties, and 'icon' does not exist in type 'Category'.
+constants.tsx(63,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(64,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(65,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(81,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(82,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(98,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(99,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(115,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(116,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(132,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(133,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(149,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
+constants.tsx(150,9): error TS2353: Object literal may only specify known properties, and 'unit' does not exist in type 'ProductVariant'.
