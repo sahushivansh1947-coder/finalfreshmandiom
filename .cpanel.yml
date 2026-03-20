@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/dmgjmxmn/freshmandi.store/
+    - /bin/cp -R * $DEPLOYPATH
