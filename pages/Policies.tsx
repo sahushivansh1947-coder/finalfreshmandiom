@@ -41,7 +41,7 @@ const PoliciesPage = () => {
 
             <div className="grid grid-cols-1 gap-8">
                 <Section icon={ShieldCheck} title="1. Sourcing & Quality">
-                    <p>Galimandi fruits aur vegetables directly local mandi aur trusted vendors se source karta hai.</p>
+                    <p>Galimandi fruits aur vegetables directly Gali Mandi aur trusted vendors se source karta hai.</p>
                     <p>Middlemen avoid kiye jaate hain taaki:</p>
                     <ul className="list-disc ml-5 space-y-2">
                         <li>Fresh produce mile</li>
@@ -51,7 +51,7 @@ const PoliciesPage = () => {
                 </Section>
 
                 <Section icon={Clock} title="2. Store Timings">
-                    <p>MandiTokri store timings are optimized for freshness:</p>
+                    <p>Galimandi store timings are optimized for freshness:</p>
                     <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100 flex justify-between items-center">
                         <div>
                             <div className="text-xs text-gray-400 uppercase font-black tracking-widest">Opens</div>

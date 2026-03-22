@@ -269,11 +269,11 @@ const ProductDetail = () => {
                                                     </div>
                                                     <div className="flex items-start py-2.5 border-t border-gray-50">
                                                         <span className="text-xs text-[#999] w-32 shrink-0 pt-0.5">Manufacturer</span>
-                                                        <span className="text-xs text-[#333] flex-1 leading-relaxed">Galimandi Fresh Pvt. Ltd.<br />Rewa Mandi Complex, Near Civil Lines, Rewa – 486001, MP</span>
+                                                        <span className="text-xs text-[#333] flex-1 leading-relaxed">Galimandi Pvt. Ltd.<br />Gali Mandi Complex, Near Civil Lines, Rewa – 486001, MP</span>
                                                     </div>
                                                     <div className="flex items-start py-2.5 border-t border-gray-50">
                                                         <span className="text-xs text-[#999] w-32 shrink-0 pt-0.5">Marketer</span>
-                                                        <span className="text-xs text-[#333] flex-1">Galimandi Fresh Pvt. Ltd.</span>
+                                                        <span className="text-xs text-[#333] flex-1">Galimandi Pvt. Ltd.</span>
                                                     </div>
                                                     <div className="flex items-start py-2.5 border-t border-gray-50">
                                                         <span className="text-xs text-[#999] w-32 shrink-0 pt-0.5">Return Policy</span>
@@ -281,7 +281,7 @@ const ProductDetail = () => {
                                                     </div>
                                                     <div className="flex items-start py-2.5 border-t border-gray-50">
                                                         <span className="text-xs text-[#999] w-32 shrink-0 pt-0.5">Seller</span>
-                                                        <span className="text-xs text-[#333] flex-1 leading-relaxed">Galimandi Fresh Pvt. Ltd.<br />Rewa Mandi, Rewa, MP – 486001</span>
+                                                        <span className="text-xs text-[#333] flex-1 leading-relaxed">Galimandi Pvt. Ltd.<br />Gali Mandi, Rewa, MP – 486001</span>
                                                     </div>
 
                                                 </div>

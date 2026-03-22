@@ -73,7 +73,7 @@ export const PRODUCTS: Product[] = [
     name: 'Fresh Spinach',
     category_id: '3',
     image_url: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&h=400&fit=crop',
-    description: 'Nutrient-rich, farm-fresh spinach bunches. Cleaned and ready for your healthy smoothies or delicious cooked dishes. Best quality greens sourced from Rewa mandi.',
+    description: 'Nutrient-rich, farm-fresh spinach bunches. Cleaned and ready for your healthy smoothies or delicious cooked dishes. Best quality greens sourced from Gali Mandi.',
     is_trending: true,
     is_active: true,
     variants: [

@@ -6,8 +6,11 @@ import {
   ChevronRight, CheckCircle2, Clock, ShoppingBag, Filter,
   ArrowLeft, Info, HelpCircle, AlertCircle, Trash2, RotateCcw,
   X, Banknote, Plus, Home as HomeIcon, Building2, Landmark,
-  Bell, Check, Edit2, AlertTriangle, Smartphone, Loader2, ArrowRight, Truck
+  Bell, Check, Edit2, AlertTriangle, Smartphone, Loader2, ArrowRight, Truck,
+  FileDown, FileText
 } from 'lucide-react';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { useApp } from '../App';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { walletService, WalletTransaction } from '../walletService';
@@ -145,6 +148,132 @@ const DashboardPage = () => {
     })
     .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
+  const downloadInvoice = async (order: any) => {
+    try {
+      if (navigator.vibrate) navigator.vibrate(20);
+      notify("Generating your invoice...", "info");
+
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.width;
+
+      // Header - Brand Section
+      doc.setFillColor(34, 197, 94); // Galimandi Primary Green
+      doc.rect(0, 0, pageWidth, 40, 'F');
+
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(24);
+      doc.setFont("helvetica", "bold");
+      doc.text("GALIMANDI", 20, 25);
+
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text("Fresh produce delivered in 30 mins", 20, 32);
+
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(14);
+      doc.text("INVOICE", pageWidth - 40, 25, { align: 'right' });
+
+      // Order Info Section
+      doc.setTextColor(50, 50, 50);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.text("Order ID:", 20, 55);
+      doc.setFont("helvetica", "normal");
+      doc.text(String(order.readable_id || order.id), 50, 55);
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Order Date:", 20, 62);
+      doc.setFont("helvetica", "normal");
+      doc.text(order.date, 50, 62);
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Status:", 20, 69);
+      doc.setFont("helvetica", "normal");
+      doc.text(order.status, 50, 69);
+
+      // Customer Details
+      doc.setFont("helvetica", "bold");
+      doc.text("Delivery Address:", pageWidth / 2, 55);
+      doc.setFont("helvetica", "normal");
+      const address = order.deliveryAddress;
+      const addressLines = [
+        user.name,
+        `+91 ${user.mobile}`,
+        `${address?.houseNo}, ${address?.area}`,
+        `${address?.city}`,
+        address?.landmark ? `Landmark: ${address.landmark}` : ''
+      ].filter(l => l);
+      doc.text(addressLines, pageWidth / 2, 62);
+
+      // Items Table
+      const tableData = order.items.map((item: any, index: number) => [
+        index + 1,
+        item.name,
+        item.weight || '-',
+        item.quantity,
+        `Rs. ${item.price}`,
+        `Rs. ${item.price * item.quantity}`
+      ]);
+
+      autoTable(doc, {
+        startY: 95,
+        head: [['#', 'Item Name', 'Weight', 'Qty', 'Rate', 'Total']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [34, 197, 94], textColor: [255, 255, 255], fontStyle: 'bold' },
+        styles: { fontSize: 9, cellPadding: 3 },
+        columnStyles: {
+          0: { cellWidth: 10 },
+          2: { cellWidth: 20 },
+          3: { cellWidth: 15, halign: 'center' },
+          4: { cellWidth: 25, halign: 'right' },
+          5: { cellWidth: 25, halign: 'right' }
+        }
+      });
+
+      // Bill Summary Section
+      const finalY = (doc as any).lastAutoTable.finalY + 10;
+      doc.setFont("helvetica", "bold");
+      doc.text("Bill Summary", 130, finalY);
+
+      doc.setFont("helvetica", "normal");
+      const itemTotal = order.items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
+
+      doc.text("Item Total:", 130, finalY + 8);
+      doc.text(`Rs. ${itemTotal}`, pageWidth - 20, finalY + 8, { align: 'right' });
+
+      if (order.discountAmount > 0) {
+        doc.text(`Coupon (${order.couponCode}):`, 130, finalY + 15);
+        doc.text(`-Rs. ${order.discountAmount}`, pageWidth - 20, finalY + 15, { align: 'right' });
+      }
+
+      doc.text("Delivery Charges:", 130, finalY + 22);
+      doc.text(order.deliveryCharge === 0 ? "FREE" : `Rs. ${order.deliveryCharge}`, pageWidth - 20, finalY + 22, { align: 'right' });
+
+      // Final Total
+      doc.setDrawColor(200, 200, 200);
+      doc.line(130, finalY + 26, pageWidth - 20, finalY + 26);
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text("Grand Total:", 130, finalY + 34);
+      doc.setTextColor(34, 197, 94);
+      doc.text(`Rs. ${order.total}`, pageWidth - 20, finalY + 34, { align: 'right' });
+
+      // Footer
+      doc.setTextColor(150, 150, 150);
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      doc.text("Thank you for choosing Galimandi!", pageWidth / 2, 280, { align: 'center' });
+      doc.text("This is a computer generated invoice and does not require a signature.", pageWidth / 2, 285, { align: 'center' });
+
+      doc.save(`galimandi_invoice_${order.readable_id || order.id}.pdf`);
+      notify("Invoice downloaded successfully!", "success");
+    } catch (error) {
+      console.error("PDF generation failed:", error);
+      notify("Failed to generate PDF invoice", "info");
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
@@ -209,6 +338,7 @@ const DashboardPage = () => {
                     onRate={() => setPendingReviewOrder(selectedOrder)}
                     onReorder={() => handleReorder(selectedOrder)}
                     onReport={() => setIsReportModalOpen(true)}
+                    onDownloadInvoice={() => downloadInvoice(selectedOrder)}
                   />
                 ) : (
                   <>
@@ -980,7 +1110,7 @@ const SettingsSection = ({ user, notify, updateProfile }: any) => {
   );
 };
 
-function OrderDetailsView({ order, onBack, onCancel, onRate, onReorder, onReport }: any) {
+function OrderDetailsView({ order, onBack, onCancel, onRate, onReorder, onReport, onDownloadInvoice }: any) {
   const deliveredAtNode = (order.timeline || []).find((t: any) => t.status === 'Delivered');
   const deliveredAt = deliveredAtNode ? new Date(deliveredAtNode.date) : null;
   const canReport = order.status === 'Delivered' && deliveredAt && (new Date().getTime() - deliveredAt.getTime() < 24 * 60 * 60 * 1000);
@@ -1095,6 +1225,15 @@ function OrderDetailsView({ order, onBack, onCancel, onRate, onReorder, onReport
               >
                 <AlertTriangle size={16} />
                 <span>Report Issue</span>
+              </button>
+            )}
+            {order.status === 'Delivered' && (
+              <button
+                onClick={onDownloadInvoice}
+                className="bg-white text-gray-900 px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-50 transition-all border border-gray-200 flex items-center gap-2"
+              >
+                <FileDown size={16} className="text-primary" />
+                <span>Invoice</span>
               </button>
             )}
             <button

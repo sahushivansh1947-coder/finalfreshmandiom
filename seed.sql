@@ -37,7 +37,7 @@ INSERT INTO products (name, price, mrp, unit, category, image, discount, descrip
   20.00, 35.00, '250g', 'Leafy Greens',
   'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&h=400&fit=crop',
   42,
-  'Nutrient-rich, farm-fresh spinach bunches. Cleaned and ready for your healthy smoothies or delicious cooked dishes. Best quality greens sourced from Rewa mandi.',
+  'Nutrient-rich, farm-fresh spinach bunches. Cleaned and ready for your healthy smoothies or delicious cooked dishes. Best quality greens sourced from Gali Mandi.',
   TRUE, 8,
   '[{"unit": "250g", "price": 20, "mrp": 35}, {"unit": "500g", "price": 38, "mrp": 70}]'
 ),

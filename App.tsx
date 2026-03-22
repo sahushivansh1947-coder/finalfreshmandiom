@@ -372,7 +372,7 @@ const Footer = () => {
             <img src="/logo.png" alt="Galimandi Logo" className="h-10 w-auto object-contain rounded-lg brightness-110" />
           </Link>
           <p className="text-sm leading-relaxed mb-6">
-            Hyperlocal delivery platform bringing fresh farm produce direct to your doorstep in 30 minutes.
+            Hyperlocal delivery platform bringing Gali Mandi produce direct to your doorstep in 30 minutes.
           </p>
           <div className="flex space-x-4">
             {['fb', 'tw', 'ig', 'in'].map(social => (

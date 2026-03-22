@@ -79,13 +79,13 @@ const Hero = ({ settings }: { settings: any }) => {
           </div>
 
           <h1 className="text-6xl lg:text-8xl font-serif text-gray-900 leading-[0.9] mb-8 italic">
-            Truly <br />
-            <span className="text-brandGreen not-italic font-brand">FRESH</span> <br />
-            <span className="text-4xl lg:text-6xl font-sans font-light tracking-tight text-gray-500 lowercase">from our fields</span>
+            Gali <br />
+            <span className="text-brandGreen not-italic font-brand">MANDI</span> <br />
+            <span className="text-4xl lg:text-6xl font-sans font-light tracking-tight text-gray-500 lowercase">Freshness Delivered</span>
           </h1>
 
           <p className="text-lg text-gray-600 mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed font-medium">
-            Discover the vibrant world of hyperlocal delivery. Direct from mandi to your doorstep in 30 minutes.
+            Discover the vibrant world of hyperlocal delivery. Direct from Gali Mandi to your doorstep in 30 minutes.
             We source fresh, you enjoy healthy.
           </p>
 
@@ -274,9 +274,9 @@ const Home = () => {
     : shuffledProducts;
 
   const badges = [
-    { icon: <Truck size={32} />, title: 'Fast Delivery', desc: 'Direct from mandi to your doorstep in 30 minutes. We ensure lightning fast delivery for all your grocery needs.' },
+    { icon: <Truck size={32} />, title: 'Fast Delivery', desc: 'Direct from Gali Mandi to your doorstep in 30 minutes. We ensure lightning fast delivery for all your grocery needs.' },
     { icon: <Headset size={32} />, title: '24/7 Support', desc: 'Our dedicated support team is available around the clock to assist you with any questions or order issues.' },
-    { icon: <Star size={32} />, title: 'Direct Sourcing', desc: 'By sourcing directly from Rewa Mandi, we eliminate middlemen, ensuring better prices and fresher produce.' },
+    { icon: <Star size={32} />, title: 'Direct Sourcing', desc: 'By sourcing directly from Gali Mandi, we eliminate middlemen, ensuring better prices and fresher produce.' },
     { icon: <RotateCcw size={32} />, title: '24h Replacement', desc: 'Not happy with the quality? We offer instant, no-questions-asked 24-hour replacements for any fresh produce.' },
   ];
 
