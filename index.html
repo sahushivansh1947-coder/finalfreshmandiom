@@ -6,6 +6,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Galimandi | Farm Fresh Delivered</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Galimandi: Farm-fresh produce delivered in 30 minutes. Sourced directly from local farmers, we bring the freshest fruits, vegetables, and dairy to your doorstep in Rewa." />
+  <meta name="keywords" content="Galimandi, grocery delivery Rewa, fresh vegetables online, buy fruits online Rewa, 30 min grocery delivery, farm fresh Rewa, online mandi, hyperlocal delivery" />
+  <meta name="author" content="Galimandi Delivery Services" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://galimandi.com/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://galimandi.com/" />
+  <meta property="og:title" content="Galimandi | Farm Fresh Delivered in 30 Minutes" />
+  <meta property="og:description" content="Experience the freshest farm produce directly from Mandi to your home. Best quality fruits and vegetables at mandis prices." />
+  <meta property="og:image" content="https://galimandi.com/logo.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://galimandi.com/" />
+  <meta property="twitter:title" content="Galimandi | Farm Fresh Delivered" />
+  <meta property="twitter:description" content="Farm-fresh produce delivered in 30 minutes in Rewa. Best quality fruits and vegetables." />
+  <meta property="twitter:image" content="https://galimandi.com/logo.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+
+  <!-- PWA / Theme -->
+  <meta name="theme-color" content="#16A34A" />
+  <link rel="manifest" href="/manifest.json" />
+
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Outfit:wght@700;800&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&display=swap"
     rel="stylesheet">
@@ -96,20 +124,17 @@
       exposeMethods: true, // Required for custom UI integration
       success: (data) => {
         console.log('MSG91 Success:', data);
-        // Notify the app about success
         window.dispatchEvent(new CustomEvent('msg91-otp-success', {
           detail: data
         }));
       },
       failure: (error) => {
         console.log('MSG91 Failure:', error);
-        // Notify the app about failure
         window.dispatchEvent(new CustomEvent('msg91-otp-failure', {
           detail: error
         }));
       },
     };
-    // Ensure compatibility with existing service
     window.msg91Config = configuration;
   </script>
 

@@ -10,7 +10,7 @@ import ProductCard from '../components/ProductCard';
 import ProductSkeleton, { CategorySkeleton } from '../components/ProductSkeleton';
 import OfferCard from '../components/OfferCard';
 import PublicReviews from '../components/PublicReviews';
-import { useApp, isStoreOpen, formatStoreTime } from '../App';
+import { useApp, isStoreOpen, formatStoreTime, SEO } from '../App';
 import { Offer } from '../types';
 
 // Helper to render the correct category icon based on string name
@@ -282,6 +282,7 @@ const Home = () => {
 
   return (
     <div className="pb-20">
+      <SEO title="Home" description="Fresh fruits, vegetables, and daily essentials delivered in 30 minutes. Sourced from the best farms directly to your home." />
       <Hero settings={settings} />
 
       {/* Categories Grid */}

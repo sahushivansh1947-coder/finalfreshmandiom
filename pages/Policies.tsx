@@ -6,7 +6,7 @@ import {
     CreditCard, XCircle, RefreshCw, Sparkles, ChevronLeft
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useApp } from '../App';
+import { useApp, SEO } from '../App';
 
 const Section = ({ icon: Icon, title, children }: { icon: any, title: string, children: React.ReactNode }) => (
     <motion.div
@@ -32,6 +32,7 @@ const PoliciesPage = () => {
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
+            <SEO title="Our Policies" description="Read Galimandi's delivery, cancellation, and refund policies. We ensure transparency and quality for every order." />
             <div className="flex items-center gap-4 mb-12">
                 <Link to="/" className="p-3 rounded-2xl bg-white border border-gray-100 text-gray-400 hover:text-primary transition-all shadow-sm">
                     <ChevronLeft size={24} />
@@ -41,12 +42,12 @@ const PoliciesPage = () => {
 
             <div className="grid grid-cols-1 gap-8">
                 <Section icon={ShieldCheck} title="1. Sourcing & Quality">
-                    <p>Galimandi fruits aur vegetables directly Gali Mandi aur trusted vendors se source karta hai.</p>
-                    <p>Middlemen avoid kiye jaate hain taaki:</p>
+                    <p>Galimandi sources fruits and vegetables directly from Gali Mandi and trusted local vendors.</p>
+                    <p>We bypass middlemen to ensure:</p>
                     <ul className="list-disc ml-5 space-y-2">
-                        <li>Fresh produce mile</li>
-                        <li>Fair pricing ho</li>
-                        <li>Local vendors ko support mile</li>
+                        <li>Fresh produce directly from the source</li>
+                        <li>Fair and transparent pricing</li>
+                        <li>Support for our local vendor community</li>
                     </ul>
                 </Section>
 
@@ -68,31 +69,31 @@ const PoliciesPage = () => {
                             Note: Store is currently temporarily shut down.
                         </div>
                     )}
-                    <p className="text-sm italic">Orders sirf store timing ke andar hi accept kiye jaate hain.</p>
+                    <p className="text-sm italic">Orders are exclusively accepted during our designated store operating hours.</p>
                 </Section>
 
                 <Section icon={ShoppingBag} title="3. Minimum Order Value">
-                    <p>Hamari service quality maintain karne ke liye:</p>
+                    <p>To maintain our high standards of service:</p>
                     <div className="bg-primary/5 p-4 rounded-2xl border border-primary/10 text-center">
                         <span className="text-sm font-bold text-gray-700">Minimum Order Value: </span>
                         <span className="text-lg font-black text-primary">₹{settings?.minOrderValue || 80}</span>
                     </div>
-                    <p className="text-sm">₹{settings?.minOrderValue || 80} se kam order place nahi kiya ja sakta.</p>
+                    <p className="text-sm">Orders below ₹{settings?.minOrderValue || 80} cannot be processed.</p>
                 </Section>
 
                 <Section icon={Truck} title="4. Delivery Rules">
-                    <p>Delivery charges simple aur transparent hain:</p>
+                    <p>Our delivery charges are straightforward and transparent:</p>
                     <div className="space-y-3">
                         <div className="bg-green-50 p-4 rounded-2xl border border-green-100">
-                            <div className="font-bold text-green-700">Order ₹{settings?.freeDeliveryThreshold || 399}+ & Within 8 KM</div>
+                            <div className="font-bold text-green-700">Orders ₹{settings?.freeDeliveryThreshold || 399}+ & Within 8 KM</div>
                             <div className="text-sm text-green-600">FREE Delivery 🎉</div>
                         </div>
                         <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
-                            <div className="font-bold text-gray-700">Order ₹{settings?.freeDeliveryThreshold || 399}+ & Beyond 8 KM</div>
-                            <div className="text-sm text-gray-600">₹5 per KM extra lagega.</div>
+                            <div className="font-bold text-gray-700">Orders ₹{settings?.freeDeliveryThreshold || 399}+ & Beyond 8 KM</div>
+                            <div className="text-sm text-gray-600">An additional ₹5 per KM will apply.</div>
                         </div>
                     </div>
-                    <p className="text-sm">Delivery charges automatically calculate hote hain aur checkout pe clearly dikhte hain.</p>
+                    <p className="text-sm">Delivery charges are automatically calculated and clearly displayed during checkout.</p>
                 </Section>
 
                 {settings?.privacyPolicy && (
@@ -104,26 +105,26 @@ const PoliciesPage = () => {
                 {!settings?.privacyPolicy && (
                     <Section icon={MapPin} title="5. Location & Privacy">
                         <ul className="space-y-3">
-                            <li>Delivery ke liye user ki current location ka use hota hai.</li>
-                            <li>Location sirf delivery distance aur charges calculate karne ke liye use hoti hai.</li>
-                            <li>Galimandi store ki exact location users ko kabhi show nahi karta.</li>
-                            <li>Location data secure rehta hai aur kisi aur purpose ke liye use nahi hota.</li>
+                            <li>We utilize your current location solely for delivery purposes.</li>
+                            <li>Location data is used exclusively to calculate delivery distance and associated charges.</li>
+                            <li>Galimandi does not disclose the exact location of its storage facilities to users.</li>
+                            <li>Your location data is securely handled and is not used for any other purpose.</li>
                         </ul>
                     </Section>
                 )}
 
                 <Section icon={CreditCard} title="6. Payment Policy">
                     <ul className="space-y-3">
-                        <li>Payments secure payment gateways ke through hoti hain.</li>
-                        <li>Galimandi card, UPI ya bank details store nahi karta.</li>
-                        <li>Available payment methods checkout ke time clearly dikhte hain.</li>
+                        <li>All transactions are processed through highly secure payment gateways.</li>
+                        <li>Galimandi does not store any sensitive information such as card details, UPI IDs, or bank account information.</li>
+                        <li>All available payment methods are clearly listed at the time of checkout.</li>
                     </ul>
                 </Section>
 
                 <Section icon={XCircle} title="7. Cancellation Policy">
                     <ul className="space-y-3">
-                        <li>Order packing shuru hone se pehle cancel kiya ja sakta hai.</li>
-                        <li>Packing ke baad cancellation allowed nahi hota.</li>
+                        <li>Orders can be cancelled before the packing process begins.</li>
+                        <li>Once an order has been packed, cancellations are no longer permitted.</li>
                     </ul>
                 </Section>
 
@@ -133,28 +134,28 @@ const PoliciesPage = () => {
                     ) : (
                         <div className="space-y-4">
                             <div>
-                                <div className="font-bold text-gray-900 mb-2 underline decoration-primary/30">Refund milega:</div>
+                                <div className="font-bold text-gray-900 mb-2 underline decoration-primary/30">Refunds are applicable for:</div>
                                 <ul className="text-sm space-y-1">
-                                    <li>• Packing se pehle cancellation par</li>
-                                    <li>• Wrong item deliver hone par</li>
-                                    <li>• Damaged / spoiled item milne par</li>
-                                    <li>• Item missing hone par</li>
+                                    <li>• Cancellations made before packing</li>
+                                    <li>• Delivery of the incorrect item</li>
+                                    <li>• Receipt of damaged or spoiled items</li>
+                                    <li>• Missing items in the order</li>
                                 </ul>
                             </div>
                             <div>
-                                <div className="font-bold text-gray-900 mb-2 underline decoration-red-500/30">Refund nahi milega:</div>
+                                <div className="font-bold text-gray-900 mb-2 underline decoration-red-500/30">Refunds are not applicable for:</div>
                                 <ul className="text-sm space-y-1 text-gray-400">
-                                    <li>• Packing ke baad cancellation</li>
-                                    <li>• Customer available na hona</li>
-                                    <li>• Galat address information</li>
-                                    <li>• Taste preferences</li>
+                                    <li>• Cancellations requested after packing</li>
+                                    <li>• Non-availability of the customer at the delivery location</li>
+                                    <li>• Incorrect or incomplete address information</li>
+                                    <li>• Personal taste preferences</li>
                                 </ul>
                             </div>
                         </div>
                     )}
                     <div className="bg-gray-900 text-white p-6 rounded-3xl mt-4">
-                        <div className="text-xs uppercase font-black tracking-widest text-gray-500 mb-2">Request Refund</div>
-                        <p className="text-sm mb-4">Profile → Report Issue → Photo upload</p>
+                        <div className="text-xs uppercase font-black tracking-widest text-gray-500 mb-2">Request a Refund</div>
+                        <p className="text-sm mb-4">Profile → Report Issue → Upload relevant photo</p>
                         <div className="text-[10px] text-gray-400 italic">Processing time: 5–7 working days</div>
                     </div>
                 </Section>
@@ -162,7 +163,7 @@ const PoliciesPage = () => {
                 <Section icon={Sparkles} title="9. Transparency Promise">
                     <div className="bg-brandGreen/10 p-6 rounded-[32px] border border-brandGreen/20">
                         <p className="text-gray-900 font-bold italic mb-4">"No hidden charges, fair pricing, and honest policies."</p>
-                        <p className="text-sm">Hum ensure karte hain ki checkout pe final payable amount clearly dikhe.</p>
+                        <p className="text-sm">We guarantee that the final payable amount is clearly and transparently displayed at checkout, with no hidden costs.</p>
                     </div>
                 </Section>
 

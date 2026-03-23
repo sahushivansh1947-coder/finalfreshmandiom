@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ShoppingCart, Star, Clock, ShieldCheck, Plus, Minus, Heart, Share2, RotateCcw, Headset, Truck, ChevronDown, ChevronUp, Search } from 'lucide-react';
-import { useApp } from '../App';
+import { useApp, SEO } from '../App';
 import { Product } from '../types';
 import ProductCard from '../components/ProductCard';
 import ProductSkeleton from '../components/ProductSkeleton';
@@ -63,6 +63,7 @@ const ProductDetail = () => {
 
     return (
         <div className="min-h-screen bg-[#F5F7F9] pb-32 md:pb-0">
+            <SEO title={product.name} description={`Buy fresh ${product.name} online at Galimandi. ${product.description || 'Sourced directly from farms in Rewa.'} Best quality and price guaranteed.`} />
             {/* Mobile Header - Ultra Clean Fixed Navigation */}
             <div className="fixed top-0 left-0 right-0 h-16 px-4 flex items-center justify-between z-[110] md:hidden">
                 <button

@@ -1,0 +1,21 @@
+{
+  "name": "Galimandi | Farm Fresh Delivered",
+  "short_name": "Galimandi",
+  "description": "Hyperlocal delivery platform bringing fresh farm produce direct to your doorstep in 30 minutes in Rewa.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFCF7",
+  "theme_color": "#16A34A",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

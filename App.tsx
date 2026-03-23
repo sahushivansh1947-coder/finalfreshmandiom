@@ -96,13 +96,23 @@ export const isStoreOpen = (settings?: any) => {
   const openingMinutes = openH * 60 + openM;
   const closingMinutes = closeH * 60 + closeM;
 
-  // Handle overnight logic (e.g., 9:00 PM to 2:00 AM)
   if (openingMinutes < closingMinutes) {
     return currentMinutes >= openingMinutes && currentMinutes <= closingMinutes;
   } else {
-    // Current time is either after opening (late night) OR before closing (early morning)
     return currentMinutes >= openingMinutes || currentMinutes <= closingMinutes;
   }
+};
+
+// SEO Component for dynamic titles and meta
+export const SEO = ({ title, description }: { title?: string, description?: string }) => {
+  useEffect(() => {
+    document.title = title ? `${title} | Galimandi` : 'Galimandi | Farm Fresh Delivered in 30 Minutes';
+    if (description) {
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', description);
+    }
+  }, [title, description]);
+  return null;
 };
 
 const Navbar = () => {
