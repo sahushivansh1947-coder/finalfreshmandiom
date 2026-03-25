@@ -77,6 +77,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, delay = 0, hideAddTo
           alt={product.name}
           width={300}
           quality={75}
+          aspectRatio="1/1"
           className="transition-transform duration-700 group-hover:scale-110 object-contain"
           sizes="(max-width: 640px) 150px, (max-width: 1024px) 250px, 300px"
         />

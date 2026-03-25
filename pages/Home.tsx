@@ -276,12 +276,16 @@ const Home = () => {
       }
     }, { threshold: 0.1 });
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
+    const currentRef = loadMoreRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
-    return () => observer.disconnect();
-  }, [isLoading]);
+    return () => {
+      if (currentRef) observer.unobserve(currentRef);
+      observer.disconnect();
+    };
+  }, [isLoading, displayCount, activeFilter]);
 
   // Handle back button to close Badge Info Modal
   useEffect(() => {
@@ -294,11 +298,11 @@ const Home = () => {
   }, [selectedBadge]);
 
   useEffect(() => {
-    if (activeFilter === 'all' && products) {
+    if (products?.length > 0 && shuffledProducts.length === 0) {
       const shuffled = [...products].sort(() => Math.random() - 0.5);
       setShuffledProducts(shuffled);
     }
-  }, [activeFilter, products]);
+  }, [products]);
 
   const displayedProducts = (activeFilter === 'trending'
     ? (products || []).filter(p => p.is_trending)
