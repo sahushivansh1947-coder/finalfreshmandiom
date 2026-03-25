@@ -7,6 +7,7 @@ import { useApp, SEO } from '../App';
 import { Product } from '../types';
 import ProductCard from '../components/ProductCard';
 import ProductSkeleton from '../components/ProductSkeleton';
+import SmartImage from '../components/SmartImage';
 
 const ProductDetail = () => {
     const { productId } = useParams<{ productId: string }>();
@@ -102,22 +103,22 @@ const ProductDetail = () => {
 
                 <div className="flex flex-col md:grid md:grid-cols-2 lg:gap-20 md:gap-10">
                     {/* Product Image Section */}
-                    <div className="relative w-full aspect-square md:rounded-[40px] overflow-hidden bg-white">
+                    <div className="relative w-full md:rounded-[40px] overflow-hidden bg-white">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="w-full h-full flex items-center justify-center p-6 md:p-12 mb-8"
+                            className="w-full p-6 md:p-12"
                         >
-                            <img
+                            <SmartImage
                                 src={product.image_url}
                                 alt={product.name}
-                                className="w-full h-full object-contain relative z-10"
-                                onError={(e) => {
-                                    (e.target as HTMLImageElement).src = 'https://plus.unsplash.com/premium_photo-1661322640130-f6a1e2c36653?w=800&q=80';
-                                }}
+                                width={600}
+                                quality={80}
+                                priority={true}
+                                className="object-contain"
+                                sizes="(max-width: 768px) 100vw, 50vw"
                             />
                         </motion.div>
-                        {/* Pagination dots removed as requested */}
                     </div>
 
                     {/* Content Section */}

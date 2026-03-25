@@ -26,16 +26,32 @@ export const calculateDeliveryFee = (amount: number, distance: number, threshold
     return (distRound * 6) + 10;
 };
 
+// Simple In-Memory Cache for reduced TTFB
+const _dbCache: any = {
+    settings: null,
+    categories: null,
+    products: {}, // categoryId as key
+    lastFetch: {}
+};
+const CACHE_TTL = 60000; // 60 seconds
+
+const isCacheValid = (key: string) => {
+    return _dbCache[key] && (Date.now() - (_dbCache.lastFetch[key] || 0) < CACHE_TTL);
+};
+
 export const db = {
     // 0. SETTINGS
     async getSettings() {
+        if (isCacheValid('settings')) return _dbCache.settings;
+
         const { data, error } = await insforge.database
             .from('system_settings')
             .select('*')
             .limit(1)
             .single();
         if (error) return null;
-        return {
+        
+        const settings = {
             openingTime: data.opening_time,
             closingTime: data.closing_time,
             isStoreShutdown: data.is_store_shutdown,
@@ -48,6 +64,10 @@ export const db = {
             refundPolicy: data.refund_policy,
             faqSupport: data.faq_support
         };
+
+        _dbCache.settings = settings;
+        _dbCache.lastFetch.settings = Date.now();
+        return settings;
     },
 
     // 1. AUTH & USERS
@@ -130,15 +150,23 @@ export const db = {
 
     // 2. PRODUCTS & CATEGORIES
     async getCategories() {
+        if (isCacheValid('categories')) return _dbCache.categories;
+
         const { data, error } = await insforge.database
             .from('categories')
             .select('*')
             .eq('is_active', true);
         if (error) throw error;
+
+        _dbCache.categories = data;
+        _dbCache.lastFetch.categories = Date.now();
         return data as Category[];
     },
 
     async getProducts(categoryId?: string) {
+        const cacheKey = `products_${categoryId || 'all'}`;
+        if (isCacheValid(cacheKey)) return _dbCache.products[cacheKey];
+
         let query = insforge.database
             .from('products')
             .select('*, variants:product_variants(*)');
@@ -149,6 +177,9 @@ export const db = {
 
         const { data, error } = await query.eq('is_active', true);
         if (error) throw error;
+
+        _dbCache.products[cacheKey] = data;
+        _dbCache.lastFetch[cacheKey] = Date.now();
         return data as Product[];
     },
 

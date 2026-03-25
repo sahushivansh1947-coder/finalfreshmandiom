@@ -5,6 +5,7 @@ import { Plus, Minus, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Product, CartItem } from '../types';
 import { useApp } from '../App';
+import SmartImage from './SmartImage';
 
 interface ProductCardProps {
   product: Product;
@@ -70,16 +71,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, delay = 0, hideAddTo
       className="bg-white rounded-2xl p-2 md:p-3 border border-gray-100 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 group flex flex-col cursor-pointer h-fit"
     >
       {/* Image + Badges */}
-      <div className="relative aspect-square rounded-xl overflow-hidden mb-2 bg-gray-50">
-        <img
+      <div className="relative rounded-xl overflow-hidden mb-2 bg-gray-50">
+        <SmartImage
           src={product.image_url}
           alt={product.name}
-          loading="lazy"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=400';
-            (e.target as HTMLImageElement).alt = ''; // Clear alt text to prevent overlapping if image failed but fallback works
-          }}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          width={300}
+          quality={75}
+          className="transition-transform duration-700 group-hover:scale-110 object-contain"
+          sizes="(max-width: 640px) 150px, (max-width: 1024px) 250px, 300px"
         />
 
         {/* Badge container */}

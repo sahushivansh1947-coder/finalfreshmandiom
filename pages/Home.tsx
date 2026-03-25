@@ -9,9 +9,10 @@ import {
 import ProductCard from '../components/ProductCard';
 import ProductSkeleton, { CategorySkeleton } from '../components/ProductSkeleton';
 import OfferCard from '../components/OfferCard';
-import PublicReviews from '../components/PublicReviews';
+const PublicReviews = React.lazy(() => import('../components/PublicReviews'));
 import { useApp, isStoreOpen, formatStoreTime, SEO } from '../App';
 import { Offer } from '../types';
+import SmartImage from '../components/SmartImage';
 
 // Helper to render the correct category icon based on string name
 const CategoryIcon = ({ name, className }: { name: string, className?: string }) => {
@@ -139,11 +140,15 @@ const Hero = ({ settings }: { settings: any }) => {
           <div className="relative w-full aspect-square max-w-[550px] group">
             <div className="absolute inset-0 bg-brandGreen/5 rounded-full animate-spin-slow blur-xl" />
             <div className="relative w-full h-full rounded-full overflow-hidden border-[12px] border-white shadow-3xl z-10 transition-transform duration-700 group-hover:scale-105">
-              <img
-                src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1200"
+              <SmartImage
+                src="https://images.unsplash.com/photo-1542838132-92c53300491e"
                 alt="Fresh Market Vegetables"
-                loading="lazy"
-                className="w-full h-full object-cover"
+                width={800}
+                quality={80}
+                priority={true}
+                aspectRatio="1/1"
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 800px"
               />
             </div>
 
@@ -152,7 +157,14 @@ const Hero = ({ settings }: { settings: any }) => {
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full border-[6px] border-white shadow-2xl z-20 overflow-hidden hidden md:block"
             >
-              <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=400" className="w-full h-full object-cover" alt="mini fruit" />
+              <SmartImage 
+                src="https://images.unsplash.com/photo-1610832958506-aa56368176cf"
+                alt="mini fruit"
+                width={200}
+                quality={65}
+                aspectRatio="1/1"
+                className="object-cover" 
+              />
             </motion.div>
 
             <div className="absolute top-10 -right-12 glass p-6 rounded-3xl shadow-2xl z-30 border border-white/50 backdrop-blur-xl animate-float">
@@ -251,6 +263,25 @@ const Home = () => {
   const [selectedBadge, setSelectedBadge] = useState<null | { title: string, desc: string, icon: React.ReactNode }>(null);
   const [activeFilter, setActiveFilter] = useState<'trending' | 'all'>('trending');
   const [shuffledProducts, setShuffledProducts] = useState<any[]>([]);
+  const [displayCount, setDisplayCount] = useState(8);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  // Intersection Observer for lazy loading more products
+  useEffect(() => {
+    if (isLoading) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setDisplayCount(prev => prev + 8);
+      }
+    }, { threshold: 0.1 });
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isLoading]);
 
   // Handle back button to close Badge Info Modal
   useEffect(() => {
@@ -269,9 +300,9 @@ const Home = () => {
     }
   }, [activeFilter, products]);
 
-  const displayedProducts = activeFilter === 'trending'
+  const displayedProducts = (activeFilter === 'trending'
     ? (products || []).filter(p => p.is_trending)
-    : shuffledProducts;
+    : shuffledProducts).slice(0, displayCount);
 
   const badges = [
     { icon: <Truck size={32} />, title: 'Fast Delivery', desc: 'Direct from Gali Mandi to your doorstep in 30 minutes. We ensure lightning fast delivery for all your grocery needs.' },
@@ -321,11 +352,13 @@ const Home = () => {
                         </div>
 
                         {/* Main Category Image */}
-                        <img
-                          src={cat.image_url}
+                        <SmartImage
+                          src={cat.image_url || ''}
                           alt={cat.name}
-                          onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
-                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-125 z-10"
+                          width={200}
+                          quality={60}
+                          aspectRatio="1/1"
+                          className="transition-transform duration-1000 group-hover:scale-125 z-10"
                         />
 
                         {/* Floating Icon Overlay */}
@@ -386,9 +419,17 @@ const Home = () => {
                 <ProductSkeleton key={`skeleton-${i}`} />
               ))
             ) : (
-              displayedProducts.map((product) => (
-                <ProductCard key={`${activeFilter}-${product.id}`} product={product} />
-              ))
+              <>
+                {displayedProducts.map((product) => (
+                  <ProductCard key={`${activeFilter}-${product.id}`} product={product} />
+                ))}
+                {/* Loader element for Intersection Observer */}
+                {((activeFilter === 'trending' ? (products || []).filter(p => p.is_trending) : (shuffledProducts)).length > displayCount) && (
+                   <div ref={loadMoreRef} className="col-span-full h-20 flex items-center justify-center">
+                     <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                   </div>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -455,7 +496,9 @@ const Home = () => {
       </AnimatePresence>
 
       {/* Public Reviews Section - Exact Placement */}
-      <PublicReviews reviews={reviews} />
+      <React.Suspense fallback={<div className="h-40 bg-white" />}>
+        <PublicReviews reviews={reviews} />
+      </React.Suspense>
 
       {/* Manual Rating Call to Action */}
       <section className="py-12 bg-gray-50 border-t border-gray-100">

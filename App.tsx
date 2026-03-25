@@ -5,15 +5,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, User, Search, MapPin, ChevronDown, Bell, LayoutDashboard, Home as HomeIcon, LogOut, Package, X, ArrowRight, CheckCircle, Heart, Star, Sparkles } from 'lucide-react';
 
 import { Product, CartItem, ManualAddress, Review, Order, Category } from './types';
-import Home from './pages/Home';
-import CartPage from './pages/Cart';
-import CheckoutPage from './pages/Checkout';
-import DashboardPage from './pages/Dashboard';
-import CategoryPage from './pages/Category';
-import PoliciesPage from './pages/Policies';
-import ProductDetail from './pages/ProductDetail';
-import AdminPage from './pages/Admin';
-import SEOPage from './pages/SEO';
+const Home = React.lazy(() => import('./pages/Home'));
+const CartPage = React.lazy(() => import('./pages/Cart'));
+const CheckoutPage = React.lazy(() => import('./pages/Checkout'));
+const DashboardPage = React.lazy(() => import('./pages/Dashboard'));
+const CategoryPage = React.lazy(() => import('./pages/Category'));
+const PoliciesPage = React.lazy(() => import('./pages/Policies'));
+const ProductDetail = React.lazy(() => import('./pages/ProductDetail'));
+const AdminPage = React.lazy(() => import('./pages/Admin'));
+const SEOPage = React.lazy(() => import('./pages/SEO'));
 import RatingModal from './components/RatingModal';
 import AuthModal from './components/AuthModal';
 import { fetchDeliveryDetails } from './deliveryService';
@@ -243,22 +243,12 @@ const Navbar = () => {
                           {filteredResults.filter(p => getCategoryName(p) === categoryName).map((product) => {
                             const variant = product.variants?.[0];
                             return (
-                              <div
+                              <Link
                                 key={product.id}
+                                to={`/product/${product.id}`}
                                 className="flex items-center gap-4 p-3 hover:bg-primary/5 rounded-2xl transition-all cursor-pointer group"
                                 onClick={() => {
-                                  if (variant) {
-                                    if (navigator.vibrate) navigator.vibrate(20);
-                                    addToCart({
-                                      id: variant.id,
-                                      product_id: product.id,
-                                      name: product.name,
-                                      price: variant.selling_price,
-                                      weight: variant.weight,
-                                      quantity: 1,
-                                      image_url: product.image_url
-                                    });
-                                  }
+                                  if (navigator.vibrate) navigator.vibrate(5);
                                   setSearchTerm('');
                                   setIsSearchFocused(false);
                                   setIsMobileSearchOpen(false);
@@ -275,10 +265,33 @@ const Navbar = () => {
                                     <span className="text-xs font-black text-gray-900">₹{variant?.selling_price}</span>
                                   </div>
                                 </div>
-                                <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-white p-2 rounded-xl">
-                                  <ShoppingCart size={14} />
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      if (variant) {
+                                        if (navigator.vibrate) navigator.vibrate(20);
+                                        addToCart({
+                                          id: variant.id,
+                                          product_id: product.id,
+                                          name: product.name,
+                                          price: variant.selling_price,
+                                          weight: variant.weight,
+                                          quantity: 1,
+                                          image_url: product.image_url
+                                        });
+                                      }
+                                    }}
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-white p-2.5 rounded-xl hover:bg-green-700 shadow-lg shadow-primary/20"
+                                  >
+                                    <ShoppingCart size={14} />
+                                  </button>
+                                  <div className="text-gray-300 group-hover:text-primary transition-colors">
+                                    <ArrowRight size={16} />
+                                  </div>
                                 </div>
-                              </div>
+                              </Link>
                             );
                           })}
                         </div>
@@ -403,20 +416,20 @@ const Footer = () => {
         <div>
           <h4 className="text-white font-bold mb-6">Useful Links</h4>
           <ul className="space-y-4 text-sm">
-            <li><Link to="/policies" className="hover:text-primary transition-colors">About Us</Link></li>
-            <li><Link to="/policies" className="hover:text-primary transition-colors">Contact Support</Link></li>
-            <li><Link to="/policies" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
-            <li><Link to="/policies" className="hover:text-primary transition-colors">Terms of Service</Link></li>
+            <li><Link to="/policies#about" className="hover:text-primary transition-colors">About Us</Link></li>
+            <li><Link to="/policies#faq" className="hover:text-primary transition-colors">Contact Support</Link></li>
+            <li><Link to="/policies#privacy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+            <li><Link to="/policies#terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
           </ul>
         </div>
 
         <div>
           <h4 className="text-white font-bold mb-6">Categories</h4>
           <ul className="space-y-4 text-sm">
-            <li><Link to="/" className="hover:text-primary transition-colors">Vegetables</Link></li>
-            <li><Link to="/" className="hover:text-primary transition-colors">Fruits</Link></li>
-            <li><Link to="/" className="hover:text-primary transition-colors">Exotics</Link></li>
-            <li><Link to="/" className="hover:text-primary transition-colors">Dairy & Milk</Link></li>
+            <li><Link to="/category/vegetables" className="hover:text-primary transition-colors">Vegetables</Link></li>
+            <li><Link to="/category/fruits" className="hover:text-primary transition-colors">Fruits</Link></li>
+            <li><Link to="/category/exotics" className="hover:text-primary transition-colors">Exotics</Link></li>
+            <li><Link to="/category/dairy-&-milk" className="hover:text-primary transition-colors">Dairy & Milk</Link></li>
           </ul>
         </div>
 
@@ -864,29 +877,46 @@ const App = () => {
     const init = async () => {
       try {
         setIsLoading(true);
-        const [pData, cData, rData, sData, cpData] = await Promise.all([
-          db.getProducts(),
-          db.getCategories(),
-          db.getReviews(),
+        // Phase 1: Critical for LCP/FCP (Settings & Categories)
+        const [sData, cData] = await Promise.all([
           db.getSettings(),
-          db.getCoupons()
+          db.getCategories()
         ]);
-        setProducts(pData);
-        setCategories(cData);
-        setReviews(rData);
         setSettings(sData);
-        setCoupons(cpData || []);
+        setCategories(cData);
 
-        // Check for session (both real and custom mobile auth)
-        const currentUser = await auth.getCurrentUser();
-        const sessionUserId = currentUser?.id || user?.id;
+        // Phase 2: Deferred background tasks
+        const deferredTasks = async () => {
+          try {
+            // Load products/reviews/coupons
+            const [pData, rData, cpData] = await Promise.all([
+              db.getProducts(),
+              db.getReviews(),
+              db.getCoupons()
+            ]);
+            setProducts(pData);
+            setReviews(rData);
+            setCoupons(cpData || []);
 
-        if (sessionUserId) {
-          await syncUserData(sessionUserId);
+            // Handle Auth (Last because it involves heavy SDK calls)
+            const currentUser = await auth.getCurrentUser();
+            const sessionUserId = currentUser?.id || user?.id;
+            if (sessionUserId) {
+              await syncUserData(sessionUserId);
+            }
+          } catch (err) {
+            console.error('Background init tasks failed', err);
+          }
+        };
+
+        // Use requestIdleCallback for truly non-critical work
+        if ('requestIdleCallback' in window) {
+           (window as any).requestIdleCallback(() => deferredTasks());
+        } else {
+           setTimeout(deferredTasks, 300);
         }
       } catch (error) {
         console.error('Initialization failed', error);
-        // Fallback or message
       } finally {
         setIsLoading(false);
       }
@@ -1025,6 +1055,15 @@ const App = () => {
     }
   };
 
+  const [renderDeferred, setRenderDeferred] = useState(false);
+  useEffect(() => {
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(() => setRenderDeferred(true));
+    } else {
+      setTimeout(() => setRenderDeferred(true), 1500);
+    }
+  }, []);
+
   return (
     <AppContext.Provider value={{
       cart, addToCart, removeFromCart, updateQuantity,
@@ -1051,35 +1090,35 @@ const App = () => {
         <div className="min-h-screen bg-brandBeige font-sans text-gray-900 selection:bg-brandGreen selection:text-white pb-20">
           <Navbar />
           <main className="pt-20">
-            <AnimatePresence mode="wait">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/cart" element={<CartPage />} />
-                <Route path="/checkout" element={<CheckoutPage />} />
-                <Route path="/product/:productId" element={<ProductDetail />} />
-                <Route path="/category/:categoryId" element={<CategoryPage />} />
-                <Route path="/policies" element={<PoliciesPage />} />
-                <Route path="/dashboard/*" element={<DashboardPage />} />
-                <Route path="/admin/*" element={<AdminPage />} />
-                <Route path="/site-index-data-v2" element={<SEOPage />} />
-                {/* Redirect for unknown routes */}
-                <Route path="*" element={<Home />} />
-              </Routes>
-            </AnimatePresence>
+            <React.Suspense fallback={<div className="min-h-screen bg-brandBeige" />}>
+              <AnimatePresence mode="wait">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/cart" element={<CartPage />} />
+                  <Route path="/checkout" element={<CheckoutPage />} />
+                  <Route path="/product/:productId" element={<ProductDetail />} />
+                  <Route path="/category/:categoryId" element={<CategoryPage />} />
+                  <Route path="/policies" element={<PoliciesPage />} />
+                  <Route path="/dashboard/*" element={<DashboardPage />} />
+                  <Route path="/admin/*" element={<AdminPage />} />
+                  <Route path="/site-index-data-v2" element={<SEOPage />} />
+                  <Route path="*" element={<Home />} />
+                </Routes>
+              </AnimatePresence>
+            </React.Suspense>
           </main>
-          <Footer />
+          
+          {renderDeferred && <Footer />}
 
           <AnimatePresence>
-            {isAuthModalOpen && (
-              <AuthModal onClose={() => setIsAuthModalOpen(false)} />
-            )}
+            {isAuthModalOpen && <AuthModal onClose={() => setIsAuthModalOpen(false)} />}
             {pendingReviewOrder && (
               <RatingModal order={pendingReviewOrder} onClose={handleReviewClose} onSubmit={handleReviewSubmit} />
             )}
           </AnimatePresence>
 
           <BottomCartBar />
-          <FirstTimeTooltip />
+          {renderDeferred && <FirstTimeTooltip />}
           <Notification />
         </div>
       </Router>

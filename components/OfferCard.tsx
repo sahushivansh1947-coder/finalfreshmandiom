@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Timer, Zap, Flame, Lock } from 'lucide-react';
 import { useApp } from '../App';
 import { Offer } from '../types';
+import SmartImage from './SmartImage';
 
 interface OfferCardProps extends Offer {
   timeLeft: string;
@@ -67,11 +68,18 @@ const OfferCard: React.FC<OfferCardProps> = ({
       whileTap={!isExpired ? { scale: 0.98 } : {}}
       className={`relative flex-shrink-0 w-[280px] md:w-full h-72 rounded-[32px] overflow-hidden shadow-xl group border border-white/20 transition-all ${isExpired ? 'grayscale opacity-80 cursor-not-allowed' : 'cursor-pointer hover:shadow-2xl hover:shadow-primary/20'} transition-all`}
     >
-      <img
-        src={image}
-        alt={title}
-        className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-      />
+      {/* Offer background image fills the card absolutely */}
+      <div className="absolute inset-0">
+        <SmartImage
+          src={image}
+          alt={title}
+          width={600}
+          quality={70}
+          aspectRatio="16/9"
+          className="transition-transform duration-700 group-hover:scale-110 object-cover"
+          sizes="(max-width: 768px) 280px, 600px"
+        />
+      </div>
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
