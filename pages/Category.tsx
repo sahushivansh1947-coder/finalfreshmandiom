@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { ShoppingBag, Loader2 } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import ProductSkeleton, { CategorySkeleton } from '../components/ProductSkeleton';
-import { useApp } from '../App';
+import { useApp, SEO } from '../App';
 
 const CategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
@@ -37,6 +37,7 @@ const CategoryPage = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
+            <SEO title={categoryName} description={`Buy fresh ${categoryName} online at Galimandi. Sourced directly from farms for the best quality and price.`} />
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-6">
                 <div className="flex items-center space-x-4">
                     <Link
