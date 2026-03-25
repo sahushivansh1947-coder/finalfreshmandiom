@@ -376,7 +376,7 @@ const CheckoutPage = () => {
     }
   };
 
-  const paymentMethods = [
+  const paymentMethods: { id: string; name: string; icon: React.ReactNode; subtitle: string; }[] = [
     { 
       id: 'cod_upi', 
       name: 'Cash on Delivery / UPI', 
