@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/dmgjmxmn/freshmandi.store
+    - export DEPLOYPATH=/home/dmgjmxmn/galimandi.store
     - /bin/cp -R dist/* $DEPLOYPATH
