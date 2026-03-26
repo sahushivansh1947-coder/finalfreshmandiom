@@ -1,5 +1,6 @@
 ---
 deployment:
   tasks:
+    - echo "Deploying build..."
     - export DEPLOYPATH=/home/dmgjmxmn/public_html/
     - /bin/cp -R dist/. $DEPLOYPATH
