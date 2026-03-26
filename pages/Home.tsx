@@ -362,6 +362,7 @@ const Home = () => {
                           width={200}
                           quality={60}
                           aspectRatio="1/1"
+                          wrapperClassName="absolute inset-0 w-full h-full"
                           className="transition-transform duration-1000 group-hover:scale-125 z-10"
                         />
 

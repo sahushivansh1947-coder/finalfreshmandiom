@@ -938,14 +938,14 @@ const AdminCategories = () => {
                 {categories.map(cat => (
                     <div key={cat.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl group hover:bg-gray-100 transition-colors">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-white rounded-xl overflow-hidden border border-gray-100 flex items-center justify-center">
-                                <img
+                            <div className="w-12 h-12 bg-white rounded-xl overflow-hidden border border-gray-100 flex items-center justify-center relative">
+                                <SmartImage
                                     src={(cat.image_url || (cat as any).imageUrl || '').trim().replace(/^["']|["']$/g, '')}
                                     alt={cat.name}
-                                    onError={(e) => {
-                                        const target = e.target as HTMLImageElement;
-                                        target.style.opacity = '0.3';
-                                    }}
+                                    width={100}
+                                    quality={60}
+                                    aspectRatio="1/1"
+                                    wrapperClassName="absolute inset-0 w-full h-full"
                                     className="w-full h-full object-cover"
                                 />
                             </div>
