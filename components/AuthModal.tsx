@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Smartphone, User, ChevronRight, ArrowLeft, Loader2 } from 'lucide-react';
-import { useApp } from '../App';
+import { useApp, requestLocationSilently } from '../App';
 import { db } from '../db';
 import { auth } from '../auth';
 
@@ -12,7 +12,7 @@ interface AuthModalProps {
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
-    const { login, notify, authSuccessCallback, setAuthSuccessCallback } = useApp();
+    const { login, notify, authSuccessCallback, setAuthSuccessCallback, setUserLocation } = useApp();
     const [step, setStep] = useState<'mobile' | 'otp' | 'profile'>('mobile');
     const [mobile, setMobile] = useState('');
     const [otp, setOtp] = useState('');
@@ -142,12 +142,18 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             const savedUser = await db.updateProfile(userId, newUser);
             await login(savedUser);
 
-            notify(`Welcome to Galimandi, ${name}!`, 'success');
+            notify(`Welcome to Galimandi, ${name}! 📍 Sharing location...`, 'success');
             if (authSuccessCallback) {
                 authSuccessCallback();
                 setAuthSuccessCallback(null);
             }
             onClose();
+
+            // 📍 Auto-request location for NEW user right after name is saved
+            // Small delay so the modal closes first and the browser prompt feels natural
+            setTimeout(() => {
+                requestLocationSilently(setUserLocation);
+            }, 800);
         } catch (err: any) {
             console.error("Profile Setup Error:", err);
             setError(err.message || 'Profile setup failed');

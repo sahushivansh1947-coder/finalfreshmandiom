@@ -357,7 +357,7 @@ const Home = () => {
 
                         {/* Main Category Image */}
                         <SmartImage
-                          src={cat.image_url || ''}
+                          src={(cat.image_url || (cat as any).imageUrl || '').trim().replace(/^["']|["']$/g, '')}
                           alt={cat.name}
                           width={200}
                           quality={60}

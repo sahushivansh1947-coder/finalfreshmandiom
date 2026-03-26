@@ -21,6 +21,38 @@ import { db } from './db';
 import { auth } from './auth';
 import { insforge } from './insforge';
 
+// ── Auto-location helper (call after login / on page load) ──
+export const requestLocationSilently = (
+  setUserLocation: (loc: { lat: number; lng: number; address?: string } | null) => void
+) => {
+  if (!navigator.geolocation) return;
+  const tryLocation = (highAccuracy: boolean) => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserLocation({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          address: 'Current Location',
+        });
+      },
+      (err) => {
+        if (highAccuracy) {
+          // Fallback to network location
+          tryLocation(false);
+        } else {
+          console.warn('Location unavailable:', err.message);
+        }
+      },
+      {
+        enableHighAccuracy: highAccuracy,
+        timeout: highAccuracy ? 8000 : 10000,
+        maximumAge: 60000,
+      }
+    );
+  };
+  tryLocation(true);
+};
+
 // Context for global state
 interface AppContextType {
   cart: CartItem[];
@@ -797,6 +829,17 @@ const App = () => {
     if (pData) setWalletBalance(pData.wallet_balance || 0);
   };
 
+  // Auto-request location for RETURNING users every time they open the website
+  useEffect(() => {
+    if (user) {
+      // Small delay so the page loads first, then ask for location
+      const timer = setTimeout(() => {
+        requestLocationSilently(setUserLocation);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, []); // Only on mount — user value captured via closure
+
   // Authentication logic
   const login = async (userData: any) => {
     setUser(userData);
@@ -1022,16 +1065,42 @@ const App = () => {
     });
   };
 
-  const addReview = (newReview: any) => {
-    const review: any = { ...newReview, id: Math.random().toString(36).substr(2, 9), date: new Date().toISOString().split('T')[0] };
-    setReviews(prev => [review, ...prev]);
-    notify('Thank you for your review!', 'success');
+  const addReview = async (newReview: any) => {
+    try {
+      const saved = await db.saveReview({
+        order_id: newReview.order_id,
+        user_id: user?.id,
+        user_name: newReview.userName,
+        rating: newReview.rating || 5,
+        message: newReview.comment || '',
+        is_public: true
+      });
+      
+      const review: any = { 
+        ...newReview, 
+        id: saved.id, 
+        date: new Date(saved.created_at).toISOString().split('T')[0] 
+      };
+      setReviews(prev => [review, ...prev]);
+      notify('Thank you for your review!', 'success');
+    } catch (error) {
+      console.error('Failed to save review:', error);
+      notify('Failed to save review. Please try again.', 'info');
+    }
   };
 
-  const handleReviewSubmit = (rating?: number, comment?: string) => {
+  const handleReviewSubmit = async (rating?: number, comment?: string) => {
     if (pendingReviewOrder) {
-      addReview({ userName: user?.name || 'Guest', rating, comment, isGuest: !user });
-      if (user) setOrders(orders.map(o => o.id === pendingReviewOrder.id ? { ...o, is_rated: true } : o));
+      await addReview({ 
+        order_id: pendingReviewOrder.id,
+        userName: user?.name || 'Guest', 
+        rating, 
+        comment, 
+        isGuest: !user 
+      });
+      if (user && pendingReviewOrder.id !== 'GUEST-REVIEW') {
+        setOrders(orders.map(o => o.id === pendingReviewOrder.id ? { ...o, is_rated: true } : o));
+      }
       setPendingReviewOrder(null);
     }
   };

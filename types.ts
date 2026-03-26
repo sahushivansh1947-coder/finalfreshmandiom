@@ -71,6 +71,8 @@ export interface Review {
   id: string;
   order_id: string;
   user_id?: string;
+  userName?: string; // App-level alias
+  comment?: string; // App-level alias
   rating: number;
   message?: string;
   is_public: boolean;

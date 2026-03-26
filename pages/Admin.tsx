@@ -547,14 +547,41 @@ const ProductForm = ({ product, categories, onClose, onSave }: any) => {
 
                     <div className="space-y-1">
                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Image URL</label>
-                        <input
-                            type="text"
-                            required
-                            value={formData.imageUrl}
-                            onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
-                            className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-primary/20 text-sm"
-                            placeholder="https://..."
-                        />
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                required
+                                value={formData.imageUrl}
+                                onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
+                                className="flex-1 bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-primary/20 text-sm"
+                                placeholder="https://... or Paste Base64"
+                            />
+                            <div className="relative">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            const reader = new FileReader();
+                                            reader.onloadend = () => {
+                                                setFormData({ ...formData, imageUrl: reader.result as string });
+                                            };
+                                            reader.readAsDataURL(file);
+                                        }
+                                    }}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                />
+                                <button type="button" className="h-full px-4 bg-gray-100 rounded-2xl text-gray-500 hover:bg-gray-200 transition-all flex items-center justify-center">
+                                    <Plus size={20} />
+                                </button>
+                            </div>
+                        </div>
+                        {formData.imageUrl && (
+                            <div className="mt-2 relative w-20 h-20 rounded-xl overflow-hidden border border-gray-100 bg-gray-50">
+                                <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                            </div>
+                        )}
                     </div>
 
                     <div className="space-y-1">
@@ -824,16 +851,45 @@ const CategoryForm = ({ category, onClose, onSave }: any) => {
                             placeholder="e.g. Fresh Fruits"
                         />
                     </div>
-                    <div className="space-y-1">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Image URL</label>
-                        <input
-                            type="text"
-                            required
-                            value={formData.imageUrl}
-                            onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
-                            className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-primary/20 text-sm"
-                            placeholder="https://..."
-                        />
+                    <div className="space-y-4">
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Image URL</label>
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    required
+                                    value={formData.imageUrl}
+                                    onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
+                                    className="flex-1 bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-primary/20 text-sm"
+                                    placeholder="https://... or Paste Base64"
+                                />
+                                <div className="relative">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                const reader = new FileReader();
+                                                reader.onloadend = () => {
+                                                    setFormData({ ...formData, imageUrl: reader.result as string });
+                                                };
+                                                reader.readAsDataURL(file);
+                                            }
+                                        }}
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                    />
+                                    <button type="button" className="h-full px-4 bg-gray-100 rounded-2xl text-gray-500 hover:bg-gray-200 transition-all flex items-center justify-center">
+                                        <Plus size={20} />
+                                    </button>
+                                </div>
+                            </div>
+                            {formData.imageUrl && (
+                                <div className="mt-2 relative w-20 h-20 rounded-xl overflow-hidden border border-gray-100 bg-gray-50">
+                                    <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <div className="flex gap-4 pt-4">
                         <button type="button" onClick={onClose} className="flex-1 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest text-gray-400 border border-gray-100 hover:bg-gray-50 transition-all">Cancel</button>
@@ -882,8 +938,16 @@ const AdminCategories = () => {
                 {categories.map(cat => (
                     <div key={cat.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl group hover:bg-gray-100 transition-colors">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-white rounded-xl overflow-hidden border border-gray-100">
-                                <img src={cat.image_url} alt={cat.name} className="w-full h-full object-cover" />
+                            <div className="w-12 h-12 bg-white rounded-xl overflow-hidden border border-gray-100 flex items-center justify-center">
+                                <img
+                                    src={(cat.image_url || (cat as any).imageUrl || '').trim().replace(/^["']|["']$/g, '')}
+                                    alt={cat.name}
+                                    onError={(e) => {
+                                        const target = e.target as HTMLImageElement;
+                                        target.style.opacity = '0.3';
+                                    }}
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                             <div>
                                 <div className="font-bold text-gray-900">{cat.name}</div>

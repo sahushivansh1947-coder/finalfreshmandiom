@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <!DOCTYPE html>
 <html lang="en">
 
@@ -143,11 +144,184 @@
     ]);
   </script>
   <script type="module" crossorigin src="/assets/index-KK4MHg2U.js"></script>
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galimandi | Farm Fresh Delivered</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Galimandi: Farm-fresh produce delivered in 30 minutes. Sourced directly from local farmers, we bring the freshest fruits, vegetables, and dairy to your doorstep in Rewa." />
+  <meta name="keywords" content="Galimandi, grocery delivery Rewa, fresh vegetables online, buy fruits online Rewa, 30 min grocery delivery, farm fresh Rewa, online mandi, hyperlocal delivery" />
+  <meta name="author" content="Galimandi Delivery Services" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://galimandi.com/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://galimandi.com/" />
+  <meta property="og:title" content="Galimandi | Farm Fresh Delivered in 30 Minutes" />
+  <meta property="og:description" content="Experience the freshest farm produce directly from Mandi to your home. Best quality fruits and vegetables at mandis prices." />
+  <meta property="og:image" content="https://galimandi.com/logo.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://galimandi.com/" />
+  <meta property="twitter:title" content="Galimandi | Farm Fresh Delivered" />
+  <meta property="twitter:description" content="Farm-fresh produce delivered in 30 minutes in Rewa. Best quality fruits and vegetables." />
+  <meta property="twitter:image" content="https://galimandi.com/logo.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+
+  <!-- PWA / Theme -->
+  <meta name="theme-color" content="#16A34A" />
+  <link rel="manifest" href="/manifest.json" />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Outfit:wght@700;800&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#16A34A',
+            accent: '#FF6B00',
+            softWhite: '#F8FAFC',
+            brandBeige: '#FDFCF7',
+            brandGreen: '#708238'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Poppins', 'sans-serif'],
+            brand: ['Outfit', 'sans-serif'],
+            serif: ['Fraunces', 'serif']
+          },
+          borderRadius: {
+            'xl': '16px',
+            '4xl': '32px',
+            '5xl': '48px',
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'spin-slow': 'spin 12s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-20px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FDFCF7;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .organic-blob {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+  </style>
+
+
+  <!-- MSG91 OTP Widget Integration -->
+  <script type="text/javascript">
+    var configuration = {
+      widgetId: "36624272444f333931393831",
+      tokenAuth: "497026TZDdbCze69a336a2P1",
+      exposeMethods: true, // Required for custom UI integration
+      success: (data) => {
+        console.log('MSG91 Success:', data);
+        window.dispatchEvent(new CustomEvent('msg91-otp-success', {
+          detail: data
+        }));
+      },
+      failure: (error) => {
+        console.log('MSG91 Failure:', error);
+        window.dispatchEvent(new CustomEvent('msg91-otp-failure', {
+          detail: error
+        }));
+      },
+    };
+    window.msg91Config = configuration;
+  </script>
+
+  <script type="text/javascript">
+    (function loadOtpScript(urls) {
+      let i = 0;
+
+      function attempt() {
+        console.log(`[MSG91] Attempting to load from: ${urls[i]}`);
+        const s = document.createElement('script');
+        s.src = urls[i];
+        s.async = true;
+        s.onload = () => {
+          if (typeof window.initSendOTP === 'function') {
+            window.initSendOTP(configuration);
+            console.log('[MSG91] OTP Provider initialized');
+          }
+        };
+        s.onerror = () => {
+          i++;
+          if (i < urls.length) {
+            attempt();
+          } else {
+            console.error('[MSG91] Failed to load OTP script');
+          }
+        };
+        document.head.appendChild(s);
+      }
+      attempt();
+    })([
+      'https://verify.msg91.com/otp-provider.js',
+      'https://verify.phone91.com/otp-provider.js'
+    ]);
+  </script>
+  <script type="module" crossorigin src="/assets/index-Dcrz06Yj.js"></script>
+>>>>>>> Stashed changes
   <link rel="stylesheet" crossorigin href="/assets/index-BCRSs5jk.css">
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root"></div>
 </body>
 
 </html>

@@ -485,11 +485,49 @@ export const db = {
                 console.warn('Reviews table may not exist yet:', error.message);
                 return [];
             }
-            return data || [];
+            const reviews = (data || []).map((r: any) => ({
+                ...r,
+                userName: r.user_name || 'Guest',
+                comment: r.message,
+                message: r.message,
+                date: new Date(r.created_at).toISOString().split('T')[0]
+            }));
+            return reviews;
         } catch (e) {
             console.warn('Could not fetch reviews:', e);
             return [];
         }
+    },
+
+    async saveReview(review: {
+        order_id?: string | null;
+        user_id?: string | null;
+        user_name?: string | null;
+        rating: number;
+        message: string;
+        is_public?: boolean;
+    }) {
+        const payload = {
+            order_id: review.order_id && review.order_id !== 'GUEST-REVIEW' ? review.order_id : null,
+            user_id: review.user_id || null,
+            user_name: review.user_name || 'Guest',
+            rating: review.rating,
+            message: review.message,
+            is_public: review.is_public !== undefined ? review.is_public : true,
+            created_at: new Date().toISOString()
+        };
+
+        const { data, error } = await insforge.database
+            .from('reviews')
+            .insert([payload])
+            .select()
+            .single();
+
+        if (error) {
+            console.error('DB SAVE REVIEW ERROR:', error);
+            throw error;
+        }
+        return data;
     },
 
     // 5. ADDRESSES
