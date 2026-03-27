@@ -263,7 +263,7 @@ const ProductDetail = () => {
                                                     </div>
                                                     <div className="flex items-center py-2.5 border-t border-gray-50">
                                                         <span className="text-xs text-[#999] w-32 shrink-0">Customer Care</span>
-                                                        <span className="text-xs font-semibold text-[#333]">{product.customer_care_details || 'support@galimandi.com'}</span>
+                                                        <span className="text-xs font-semibold text-[#333]">{product.customer_care_details || 'support@galimandi.store'}</span>
                                                     </div>
                                                     <div className="flex items-center py-2.5 border-t border-gray-50">
                                                         <span className="text-xs text-[#999] w-32 shrink-0">Country of Origin</span>

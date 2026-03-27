@@ -11,7 +11,7 @@ const SEOPage = () => {
         "@context": "https://schema.org",
         "@type": "GroceryStore",
         "name": "Galimandi",
-        "image": "https://galimandi.com/logo.svg",
+        "image": "https://galimandi.store/logo.png",
         "description": "Hyperlocal delivery platform bringing fresh farm produce direct to your doorstep in 30 minutes in Rewa.",
         "address": {
             "@type": "PostalAddress",

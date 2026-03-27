@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /dashboard
 
-Sitemap: https://galimandi.com/sitemap.xml
+Sitemap: https://galimandi.store/sitemap.xml
