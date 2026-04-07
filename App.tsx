@@ -16,6 +16,7 @@ const AdminPage = React.lazy(() => import('./pages/Admin'));
 const SEOPage = React.lazy(() => import('./pages/SEO'));
 import RatingModal from './components/RatingModal';
 import AuthModal from './components/AuthModal';
+import PushNotificationPrompt from './components/PushNotificationPrompt';
 import { fetchDeliveryDetails } from './deliveryService';
 import { db } from './db';
 import { auth } from './auth';
@@ -1189,6 +1190,7 @@ const App = () => {
           <BottomCartBar />
           {renderDeferred && <FirstTimeTooltip />}
           <Notification />
+          <PushNotificationPrompt />
         </div>
       </Router>
     </AppContext.Provider>

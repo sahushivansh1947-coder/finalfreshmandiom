@@ -10,6 +10,7 @@ import {
 import { insforge } from '../insforge';
 import { db } from '../db';
 import { useApp } from '../App';
+import SmartImage from '../components/SmartImage';
 
 const AdminPage = () => {
     const { user, logout } = useApp();
@@ -28,6 +29,7 @@ const AdminPage = () => {
         { name: 'Categories', icon: <List size={20} /> },
         { name: 'Coupons', icon: <Tag size={20} /> },
         { name: 'Banners', icon: <ImageIcon size={20} /> },
+        { name: 'Notifications', icon: <Bell size={20} /> },
         { name: 'Reviews & Issues', icon: <MessageSquare size={20} /> },
         { name: 'Reports', icon: <BarChart3 size={20} /> },
     ];
@@ -105,6 +107,7 @@ const AdminPage = () => {
                         {activeTab === 'Categories' && <AdminCategories />}
                         {activeTab === 'Coupons' && <AdminCoupons />}
                         {activeTab === 'Banners' && <AdminBanners />}
+                        {activeTab === 'Notifications' && <AdminNotifications />}
                         {activeTab === 'Reviews & Issues' && <AdminReviews />}
                         {activeTab === 'Reports' && <AdminReports />}
                     </AnimatePresence>
@@ -1365,6 +1368,272 @@ const AdminReports = () => {
                 </div>
             </div>
         </div>
+    );
+};
+
+// ─── Admin Notifications (Push Broadcast) ───────────────────────────────────
+const INSFORGE_BASE = 'https://46d5hap4.us-east.insforge.app';
+const INSFORGE_KEY  = 'ik_56c8374bbcda6df9fcfe54f0d777ee15';
+
+const QUICK_TEMPLATES = [
+    {
+        emoji: '🔥',
+        label: 'Flash Sale',
+        title: '🔥 Flash Sale is LIVE!',
+        body: 'Huge discounts on fresh vegetables & fruits for the next 2 hours. Shop now before it ends!',
+        url: '/'
+    },
+    {
+        emoji: '🛒',
+        label: 'New Arrivals',
+        title: '🌿 New Farm Arrivals!',
+        body: 'Fresh produce just arrived from the mandi. Get the freshest picks at Galimandi!',
+        url: '/'
+    },
+    {
+        emoji: '🎁',
+        label: 'Coupon Deal',
+        title: '🎁 Exclusive Offer Just for You',
+        body: 'Use code FRESH20 to get 20% off on your next order. Limited time only!',
+        url: '/'
+    },
+    {
+        emoji: '🚚',
+        label: 'Free Delivery',
+        title: '🚚 Free Delivery Today!',
+        body: 'Order above ₹399 and get FREE delivery today. Ends at midnight!',
+        url: '/'
+    },
+    {
+        emoji: '⏰',
+        label: 'Limited Stock',
+        title: '⏰ Limited Stock Alert!',
+        body: 'Some items are running out fast. Order now before they go out of stock!',
+        url: '/'
+    },
+];
+
+const AdminNotifications = () => {
+    const [title, setTitle] = useState('');
+    const [body, setBody] = useState('');
+    const [url, setUrl] = useState('/');
+    const [sending, setSending] = useState(false);
+    const [result, setResult] = useState<{ sent: number; failed: number; total: number } | null>(null);
+    const [error, setError] = useState('');
+    const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
+    const [logs, setLogs] = useState<{ ts: string; title: string; sent: number }[]>([]);
+
+    useEffect(() => {
+        // Count active subscribers
+        fetch(`${INSFORGE_BASE}/rest/v1/push_subscriptions?is_active=eq.true&select=id`, {
+            headers: { 'apikey': INSFORGE_KEY, 'Authorization': `Bearer ${INSFORGE_KEY}` }
+        })
+            .then(r => r.json())
+            .then(data => setSubscriberCount(Array.isArray(data) ? data.length : 0))
+            .catch(() => setSubscriberCount(0));
+        // Load logs from localStorage
+        const saved = localStorage.getItem('galimandi_push_logs');
+        if (saved) setLogs(JSON.parse(saved));
+    }, []);
+
+    const applyTemplate = (tpl: typeof QUICK_TEMPLATES[0]) => {
+        setTitle(tpl.title);
+        setBody(tpl.body);
+        setUrl(tpl.url);
+        setResult(null);
+        setError('');
+    };
+
+    const handleSend = async () => {
+        if (!title.trim() || !body.trim()) {
+            setError('Title and body are required.');
+            return;
+        }
+        setSending(true);
+        setResult(null);
+        setError('');
+        try {
+            const res = await fetch(`${INSFORGE_BASE}/functions/v1/send-push`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${INSFORGE_KEY}`
+                },
+                body: JSON.stringify({ title, body, url, icon: '/logo.png' })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Send failed');
+            setResult(data);
+            // Save to local log
+            const newLog = { ts: new Date().toLocaleString(), title, sent: data.sent };
+            const updated = [newLog, ...logs].slice(0, 10);
+            setLogs(updated);
+            localStorage.setItem('galimandi_push_logs', JSON.stringify(updated));
+        } catch (err: any) {
+            setError(err.message || 'Something went wrong');
+        } finally {
+            setSending(false);
+        }
+    };
+
+    return (
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 max-w-3xl">
+            {/* Header stats */}
+            <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white p-6 rounded-[28px] border border-gray-100 shadow-sm flex items-center gap-4">
+                    <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-primary">
+                        <Bell size={22} />
+                    </div>
+                    <div>
+                        <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Subscribers</div>
+                        <div className="text-3xl font-black text-gray-900">
+                            {subscriberCount === null ? '…' : subscriberCount}
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-white p-6 rounded-[28px] border border-gray-100 shadow-sm flex items-center gap-4">
+                    <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500">
+                        <TrendingUp size={22} />
+                    </div>
+                    <div>
+                        <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Notifications Sent</div>
+                        <div className="text-3xl font-black text-gray-900">{logs.length > 0 ? logs.reduce((a, l) => a + l.sent, 0) : '0'}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                {/* Compose */}
+                <div className="lg:col-span-3 bg-white rounded-[32px] border border-gray-100 shadow-sm p-8 space-y-6">
+                    <h3 className="text-xl font-black text-gray-900">Compose Notification</h3>
+
+                    {/* Quick Templates */}
+                    <div>
+                        <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Quick Templates</div>
+                        <div className="flex flex-wrap gap-2">
+                            {QUICK_TEMPLATES.map((tpl) => (
+                                <button
+                                    key={tpl.label}
+                                    onClick={() => applyTemplate(tpl)}
+                                    className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 hover:bg-primary/10 hover:text-primary border border-gray-100 hover:border-primary/20 rounded-xl text-xs font-bold text-gray-600 transition-all"
+                                >
+                                    <span>{tpl.emoji}</span> {tpl.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Title */}
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Notification Title</label>
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={e => { setTitle(e.target.value); setError(''); setResult(null); }}
+                            placeholder="e.g. 🔥 Flash Sale is LIVE!"
+                            className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-primary/20 text-sm font-medium"
+                        />
+                    </div>
+
+                    {/* Body */}
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Message</label>
+                        <textarea
+                            value={body}
+                            onChange={e => { setBody(e.target.value); setError(''); setResult(null); }}
+                            placeholder="Tell your customers about the offer..."
+                            rows={4}
+                            className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-primary/20 text-sm font-medium resize-none"
+                        />
+                        <div className="text-[10px] text-gray-400 text-right pr-1">{body.length} / 160 chars</div>
+                    </div>
+
+                    {/* URL */}
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Click URL (optional)</label>
+                        <input
+                            type="text"
+                            value={url}
+                            onChange={e => setUrl(e.target.value)}
+                            placeholder="/"
+                            className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-primary/20 text-sm font-medium"
+                        />
+                    </div>
+
+                    {/* Preview */}
+                    {(title || body) && (
+                        <div className="bg-gray-900 rounded-2xl p-4 flex items-start gap-3">
+                            <img src="/logo.png" alt="" className="w-10 h-10 rounded-xl object-contain bg-white p-1 shrink-0" />
+                            <div>
+                                <div className="text-sm font-black text-white">{title || 'Notification Title'}</div>
+                                <div className="text-xs text-gray-400 mt-0.5 font-medium">{body || 'Your message here...'}</div>
+                                <div className="text-[10px] text-gray-600 mt-1">galimandi.store · now</div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Error */}
+                    {error && (
+                        <div className="bg-red-50 border border-red-100 rounded-2xl p-4 text-sm text-red-600 font-bold flex items-center gap-2">
+                            <XCircle size={16} /> {error}
+                        </div>
+                    )}
+
+                    {/* Success */}
+                    {result && (
+                        <div className="bg-green-50 border border-green-100 rounded-2xl p-4">
+                            <div className="text-sm font-black text-green-700 flex items-center gap-2">
+                                <CheckCircle size={16} /> Notification Sent!
+                            </div>
+                            <div className="mt-2 flex gap-4 text-xs font-bold">
+                                <span className="text-green-600">✅ {result.sent} delivered</span>
+                                {result.failed > 0 && <span className="text-red-500">❌ {result.failed} failed</span>}
+                                <span className="text-gray-400">of {result.total} total</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Send Button */}
+                    <motion.button
+                        onClick={handleSend}
+                        disabled={sending || !title.trim() || !body.trim()}
+                        whileTap={{ scale: 0.97 }}
+                        className="w-full py-4 bg-primary text-white font-black text-sm rounded-2xl uppercase tracking-widest shadow-lg shadow-primary/20 hover:bg-green-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {sending ? (
+                            <><motion.div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full" animate={{ rotate: 360 }} transition={{ duration: 0.7, repeat: Infinity, ease: 'linear' }} />Sending…</>
+                        ) : (
+                            <><Bell size={16} />Send to {subscriberCount ?? '…'} Subscriber{subscriberCount !== 1 ? 's' : ''}</>
+                        )}
+                    </motion.button>
+                </div>
+
+                {/* Notification Log */}
+                <div className="lg:col-span-2 bg-white rounded-[32px] border border-gray-100 shadow-sm p-8">
+                    <h3 className="text-lg font-black text-gray-900 mb-6">Recent Sent</h3>
+                    {logs.length === 0 ? (
+                        <div className="text-center py-12">
+                            <Bell size={32} className="text-gray-200 mx-auto mb-3" />
+                            <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">No notifications sent yet</div>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {logs.map((log, i) => (
+                                <div key={i} className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                    <div className="text-sm font-bold text-gray-900 truncate">{log.title}</div>
+                                    <div className="flex items-center justify-between mt-1">
+                                        <div className="text-[10px] text-gray-400 font-bold">{log.ts}</div>
+                                        <div className="text-[10px] font-black text-primary bg-green-50 px-2 py-0.5 rounded-full">
+                                            {log.sent} sent
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </motion.div>
     );
 };
 
